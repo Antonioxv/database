@@ -1,53 +1,69 @@
- #include<vector>
- #include<iostream>
+#include<iostream>
 
-class MaxPQ{
+using namespace std;
+
+class MaxPQ {
 public:
-    MaxPQ() = default;
-    void insert(int value);
+    MaxPQ() {array = new int[1024];size = 0;}
+    ~MaxPQ() {delete[] array;}
+    void insert(int val);
     int deleMax();
+    int getSize() {return size;}
 private:
-    std::vector<int> arr;
-    void sink(int k);
-    void swim(int k);
+    int size;
+    int* array;
+    void sink(int pos);
+    void swim(int pos);
+    void exch(int i, int j);
 };
 
-void MaxPQ::swim(int k) {
-    int pos = k;
-    while(pos > 1 && arr[pos] > arr[pos/2])
-    {
-        //这是最大优先队列，较大的值在上面
-        int tmp     = arr[pos];
-        arr[pos]    = arr[pos/2];
-        arr[pos/2]  = tmp;
-        pos = pos/2;
+void MaxPQ::exch(int i, int j) {
+    int k = array[i];
+    array[i] = array[j];
+    array[j] = k;
+}
+
+void MaxPQ::sink(int pos) {
+    int k = pos;
+    while(k*2 <= size) {
+        int j = k*2;
+        if (j<size && array[j] < array[j+1])j++;
+        if (array[j] < array[k])break;
+        exch(k, j);
+        k = k*2;
     }
 }
 
-void MaxPQ::sink(int k) {
-    //下沉操作，如果位于k的节点比其子节点要小，则下沉
-    int pos     = k;
-    int size    = arr.size();
-    while(pos*2 <= size) {
-         int j = pos*2;
-         if (j < size && arr[j]<arr[j+1])j++;
-         int tmp = arr[j];
-         arr[j] = arr[pos];
-         arr[pos] = tmp;
+void MaxPQ::swim(int pos) {
+    int k = pos;
+    while(k > 1 && array[k] > array[k/2]) {
+        exch(k, k/2);
+        k = k/2;
     }
-}
-
-
-int MaxPQ::deleMax() {
-    //移除最大元素，并且返回
-    int res = arr[0];
-    arr[0]  = arr[arr.size() - 1];
-    arr.pop_back();
-    sink(0);
-    return res;
 }
 
 void MaxPQ::insert(int value) {
-    arr.push_back(value);
-    swim(arr.size());
+    array[++size] = value;
+    swim(size);
+}
+
+int MaxPQ::deleMax() {
+    int res = array[1];
+    exch(1, size--);
+    array[size+1] = 0;
+    sink(1);
+    return res;
+}
+
+int main() {
+    MaxPQ pq;
+    pq.insert(1);
+    pq.insert(7);
+    pq.insert(2);
+    pq.insert(4);
+    pq.insert(8);
+
+    while(pq.getSize()) {
+        cout << pq.deleMax();
+    }
 }
