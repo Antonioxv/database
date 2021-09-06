@@ -1,37 +1,21 @@
-## Welcome to GitHub Pages
+# 优先队列的实现
+## Thinking-基本思想
+优先队列是一个数据结构，数据进入队列，并且按照权值的大/小顺序出队
 
-You can use the [editor on GitHub](https://github.com/PinkDoc/database/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## API-调用
+* void insert(int val);  //用于插入数据
+* int deleMax();         //用于删除数据，此处是按照最大的数据返回！
+* int getSize();         //获取队列大小
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/PinkDoc/database/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Code-实现
+在实现insert 和 deleMax之前， 我们先定义两个队列操作，swim 和 sink（上浮和下沉），他们是我们实现队列的关键。
+`void MaxPQ::sink(int pos) {
+    int k = pos;
+    while(k*2 <= size) {
+        int j = k*2;
+        if (j<size && array[j] < array[j+1])j++;
+        if (array[j] < array[k])break;
+        exch(k, j);
+        k = k*2;
+    }
+}`
