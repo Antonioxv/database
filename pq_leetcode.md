@@ -26,3 +26,11 @@
 pair第一个存放的是值的大小，第二个存放的是值的位置， 再创建一个vector<int>存放结果
   
 定义一个指针pos便利nums数组，如果pos - pq.top().first > k 就弹出pq顶部,保证了最大值在[pos-k, pos]中。
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
